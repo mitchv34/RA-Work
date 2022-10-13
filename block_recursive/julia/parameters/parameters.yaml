@@ -1,0 +1,21 @@
+Primitives:
+  beta : 0.996 # discount factor
+  rho : 0.98 # persistence of productivity
+  sigma_e : 0.01 # standard deviation of productivity shocks
+  n_z : 15 # number of productivity states
+  gamma  : 0.6 # job finding rate parameter
+  kappa : 2.37 # vacancy posting cost
+  delta_bar : 0.012 # job destruction rate
+  # utility function parameters:
+  sigma : 0.0 
+  alpha : 1.0
+  chi : 2.0
+  a : 0.33 # job posting opportunities parameter
+  b_prob  : 0.1 # probability of loosing unemployment benefits
+  n_W : 10  # number of wage grid points
+  W_max : 60.0 # Maximum wage
+  W_min : 4.0 # Minimum wage
+  s_min : 0.0 # Minimum search intensity
+  s_max : 1.0 # Maximum search intensity
+  n_s : 100 # Number of search intensity grid points
+  

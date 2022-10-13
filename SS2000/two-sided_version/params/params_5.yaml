@@ -1,0 +1,29 @@
+Primitives:
+  r : 0.05
+  μ : 0.5
+  ρ_scale : 750
+  σ_scale : 750
+  b : "0.0"
+  c : "0.0"
+ProdFunct:
+  f : (λ * x^ε + (1-λ) * y^ε)^(1/ε)
+  params:
+    λ : 0.45
+    ε : 0.01
+Type_space:
+  x_lower : 0.0 
+  x_upper : 1.0
+  y_lower : 0.0
+  y_upper : 1.0
+  n_x : 500
+  n_y : 500
+Type_distribution:
+  x_dist : Uniform
+  y_dist : Uniform
+  dist_params:
+    x:
+    y:
+    
+    
+
+
