@@ -1,7 +1,20 @@
-function params = create_params(psi, beta, alpha, phi, gamma, theta_bar, A)
+function params = create_params(psi, beta, alpha, phi, gamma, theta_bar, A, sigma, rho)
 
     % Create a structure with the parameters of the model
-    
+    % Inputs:
+    %   psi:        persistence of productivity
+    %   beta:       discount factor
+    %   alpha:      capital share
+    %   phi:        capital depreciation rate
+    %   gamma:      elasticity of substitution
+    %   theta_bar:  steady state of the technology
+    %   A:          scale parameter of the technology 
+    % Optional inputs: 
+    %   sigma:      standard deviation of the technology shock
+    %   rho:        presistence of the technology shock
+    % Output:
+    %   params:     structure with the parameters of the model
+
     % Calculate delta
     delta = beta * (phi + alpha * (1 - phi));
 
@@ -14,6 +27,17 @@ function params = create_params(psi, beta, alpha, phi, gamma, theta_bar, A)
     params.theta_bar= theta_bar;
     params.A        = A;
     params.delta    = delta;
+    switch nargin
+        case 9
+            params.sigma    = sigma;
+            params.rho      = rho;
+        case 8
+            params.sigma    = sigma;
+            params.rho      = 1.0;
+        otherwise
+            params.sigma    = 0.00;
+            params.rho      = 1.0;
+    end
 
 end % create_params
 

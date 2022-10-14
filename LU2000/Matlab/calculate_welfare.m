@@ -35,15 +35,15 @@ function [Delta] = calculate_welfare(stochastic_economy, det_economy, params, Ns
     n_sp_bar = stochastic_economy.n_sp_bar;
     n_ls = stochastic_economy.n_ls;
 
-    T         = size(C_sp_star,2);
+    T         = size(C_sp_star,1);
     
     % Generate vector of beta^t
     beta_t    = beta.^(0:T-1)';
 
     % Calculate lifetime utility of the stochastic economies
-    U_sp_star = mean( ( ((C_sp_star - X_sp_star).^(1 - gamma) - 1) / (1 - gamma) - A * n_sp_star)*beta_t);
-    U_sp_bar  = mean( ( ((C_sp_bar - X_sp_bar).^(1 - gamma) - 1)   / (1 - gamma) - A * n_sp_bar) *beta_t);
-    U_ls      = mean( ( ((C_ls - X_ls).^(1 - gamma) - 1)           / (1 - gamma) - A * n_ls)     *beta_t);
+    U_sp_star = mean( sum( ( ((C_sp_star - X_sp_star).^(1 - gamma) - 1) / (1 - gamma) - A * n_sp_star).*beta_t) );
+    U_sp_bar  = mean( sum( ( ((C_sp_bar - X_sp_bar).^(1 - gamma) - 1)   / (1 - gamma) - A * n_sp_bar) .*beta_t) );
+    U_ls      = mean( sum( ( ((C_ls - X_ls).^(1 - gamma) - 1)           / (1 - gamma) - A * n_ls)     .*beta_t) );
     
     % Unpack the results of the simulation of the deterministic economy (Consumption, and labor)
     % C_ls = det_economy(1,:);

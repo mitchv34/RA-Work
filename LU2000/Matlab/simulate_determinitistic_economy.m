@@ -1,4 +1,4 @@
-function [sim_results] = simulate_determinitistic_economy(params, ss, T, T_burn)
+function [sim_results] = simulate_determinitistic_economy(params, ss, T)
 
     % Simulate a deterministic economy
     % Inputs:
@@ -22,8 +22,8 @@ function [sim_results] = simulate_determinitistic_economy(params, ss, T, T_burn)
 
     % Pre allocate 
 %     theta     = theta_Bar * ones(T, 1); % Productivity (Fixed)
-    C_sp      = C_ss      * ones(T - T_burn, 1); % Consumption social planner
-    C_ls      = C_ls      * ones(T - T_burn, 1); % Consumption laissez faire (no taxation)
+    C_sp      = C_ss      * ones(T, 1); % Consumption social planner
+    C_ls      = C_ls      * ones(T, 1); % Consumption laissez faire (no taxation)
     % C_ls      = zeros(T, 1);            % Consumption laissez faire (no taxation)
     X_sp      = alpha * C_sp;           % Measure of past average consumption associated with C_ls
     X_ls      = alpha * C_ls;           % Measure of past average consumption associated with C_ls

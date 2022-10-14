@@ -7,9 +7,9 @@ clc
 
 tic
 
+
 % Set Model parameters
-sigma_vals      = [0.01 0.04];
-psi             = 0.9;
+
 beta            = 0.97;
 phi             = 0.0;
 gamma_vals      = [1.5 5.0];
@@ -28,9 +28,15 @@ A               = 1;
 
 % Set simulation parameters;
 % Reference page 363.
-T               = 1100;                 % Number of periods
+T               = 1000;                 % Number of periods
 Tburn           = 100;                  % Number of periods to burn
 Nsim            = 1E4;                  % Number of simulations
+% Specify the stochastic process for the productivity shock
+which_method = 'paper'; % 'paper' or 'AR1'
+% Specify stochastic process parameters
+sigma_vals      = [0.01 0.04];         % Standard deviation of the shock
+psi             = 0.9;                 % For 'paper' method
+rho             = 0.9;                 % For 'AR1' method
 
 % Pre allocate space for results
 sp_sp_star = zeros(1, numel(gamma_vals) * numel(alpha_vals) * numel(sigma_vals));
@@ -39,27 +45,33 @@ sp_ls = zeros(1, numel(gamma_vals) * numel(alpha_vals) * numel(sigma_vals));
 ls_det_LS = zeros(1, numel(gamma_vals) * numel(alpha_vals) * numel(sigma_vals));
 
 i = 1;
-for sigma = sigma_vals                  % Loop over sigma
+for sigma = sigma_vals            
+    % Set Seed for Identical Simulations Across Parameters;      % Loop over sigma
+    % Pre-compute shocks
+    rng(90212);              
+    disp_params = create_params(psi, 0, 0, 0, 0, theta_bar, 0, sigma, rho); % Create params struct for simulation  
+    theta                   = simulate_shocks(disp_params, T + Tburn, Nsim, which_method);
+    theta_Bar               = mean(mean(theta)); % Compute mean of theta over simulations and periods
     for gamma = gamma_vals              % Loop over gamma
         for  alpha = alpha_vals         % Loop over alpha
             
             fprintf("Simulating for sigma = " + sigma + " gamma = " + gamma + " alpha = " + alpha + "...")
-            rng(90212);                % Set Seed for Identical Simulations Across Parameters;
             
             % Generate Parameters;
-            params                  = create_params(psi, beta, alpha, phi, gamma, theta_bar, A);
+            params                  = create_params(psi, beta, alpha, phi, gamma, theta_bar, A, sigma, rho);
             
-            % Steady State Calculation for Social Planner;
+            % Steady State Calcul ation for Social Planner;
             [C_ss, tau_ss]          = steady_state(params);  
             ss                      = [C_ss, tau_ss];
             
             % Simulate; 
-            sim_results             = do_simulations(Nsim, params, ss, sigma, T, Tburn);
+            sim_results             = simulate_economy(params, ss, theta, Tburn);
+            % sim_results             = do_simulations(Nsim, params, ss, sigma, T, Tburn);
             
             % Get theta_Bar
 %             sim_results_theta       = sim_results(1:Nsim,:);
-            sim_results_theta       = sim_results.theta;
-            theta_Bar               = mean(mean(sim_results_theta));
+            % sim_results_theta       = sim_results.theta;
+
 
             % Parameters for Deterministic Simulation (needs to include theta_Bar);
             params_det              = params;
@@ -70,7 +82,7 @@ for sigma = sigma_vals                  % Loop over sigma
             ss_det                  = [C_ss_det, tau_ss_det];
             
             % Simulate Deterministic Economy;
-            sim_results_det         = simulate_determinitistic_economy(params_det, ss, T, Tburn);
+            sim_results_det         = simulate_determinitistic_economy(params_det, ss, T);
 
             % Calculate welfare
             fprintf("Solving for Delta.\n")
