@@ -32,11 +32,10 @@ T               = 1000;                 % Number of periods
 Tburn           = 100;                  % Number of periods to burn
 Nsim            = 1E4;                  % Number of simulations
 % Specify the stochastic process for the productivity shock
-which_method = 'paper'; % 'paper' or 'AR1'
+which_method = 'AR1'; % 'paper' or 'AR1'
 % Specify stochastic process parameters
 sigma_vals      = [0.01 0.04];         % Standard deviation of the shock
 psi             = 0.9;                 % For 'paper' method
-rho             = 0.9;                 % For 'AR1' method
 
 % Pre allocate space for results
 sp_sp_star = zeros(1, numel(gamma_vals) * numel(alpha_vals) * numel(sigma_vals));
@@ -49,7 +48,7 @@ for sigma = sigma_vals
     % Set Seed for Identical Simulations Across Parameters;      % Loop over sigma
     % Pre-compute shocks
     rng(90212);              
-    disp_params = create_params(psi, 0, 0, 0, 0, theta_bar, 0, sigma, rho); % Create params struct for simulation  
+    disp_params = create_params(psi, 0, 0, 0, 0, theta_bar, 0, sigma); % Create params struct for simulation  
     theta                   = simulate_shocks(disp_params, T + Tburn, Nsim, which_method);
     theta_Bar               = mean(mean(theta)); % Compute mean of theta over simulations and periods
     for gamma = gamma_vals              % Loop over gamma
@@ -58,7 +57,7 @@ for sigma = sigma_vals
             fprintf("Simulating for sigma = " + sigma + " gamma = " + gamma + " alpha = " + alpha + "...")
             
             % Generate Parameters;
-            params                  = create_params(psi, beta, alpha, phi, gamma, theta_bar, A, sigma, rho);
+            params                  = create_params(psi, beta, alpha, phi, gamma, theta_bar, A, sigma);
             
             % Steady State Calcul ation for Social Planner;
             [C_ss, tau_ss]          = steady_state(params);  
@@ -71,7 +70,6 @@ for sigma = sigma_vals
             % Get theta_Bar
 %             sim_results_theta       = sim_results(1:Nsim,:);
             % sim_results_theta       = sim_results.theta;
-
 
             % Parameters for Deterministic Simulation (needs to include theta_Bar);
             params_det              = params;

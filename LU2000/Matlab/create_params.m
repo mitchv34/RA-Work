@@ -1,4 +1,4 @@
-function params = create_params(psi, beta, alpha, phi, gamma, theta_bar, A, sigma, rho)
+function params = create_params(psi, beta, alpha, phi, gamma, theta_bar, A, sigma)
 
     % Create a structure with the parameters of the model
     % Inputs:
@@ -28,15 +28,10 @@ function params = create_params(psi, beta, alpha, phi, gamma, theta_bar, A, sigm
     params.A        = A;
     params.delta    = delta;
     switch nargin
-        case 9
-            params.sigma    = sigma;
-            params.rho      = rho;
         case 8
             params.sigma    = sigma;
-            params.rho      = 1.0;
         otherwise
             params.sigma    = 0.00;
-            params.rho      = 1.0;
     end
 
 end % create_params
