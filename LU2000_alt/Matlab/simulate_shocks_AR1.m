@@ -14,8 +14,8 @@ function [theta] = simulate_shocks_AR1(params, T, N)
     psi       = params.psi;
 
     % Define AR1 process
-    ar1 = arima('Constant',(1-psi) * log(theta_bar),'AR',{psi},'Variance',sigma/10);
+    ar1       = arima('Constant',(1-psi) * log(theta_bar),'AR',{psi},'Variance',sigma^2);
     % Simulate shocks
-    theta = exp(simulate(ar1,T, 'NumPaths',N)');
-
+    theta     = exp(simulate(ar1,T, 'NumPaths',N)');
+    
 end  %simulate_shocks_AR1

@@ -12,11 +12,9 @@ function [C_bar, tau_bar] = steady_state(params)
     xi         = params.xi;
 
     % Consumption;
-    % TODO : Check
-    C_bar       = (beta * xi * (1 - phi) * alpha /(1 - beta * phi) + A/theta_bar )^(-1/gamma);           % Eq (12)
-    % Taxes;
-    % TODO : CHECK
-    tau_bar     = (1 + (A * (1-beta*phi)) / alpha * theta_bar * beta * (1-phi))^(-1);                    %TODO: Nuber eq
+    C_bar       = (beta * xi * (1 - phi) * alpha /(1 - beta * phi) + A/theta_bar )^(-1/gamma);           % Eq (11)
+    % Tax;
+    tau_bar     = 1 - A./theta_bar* C_bar^gamma;                                                         % Eq (8)
 
 end
 

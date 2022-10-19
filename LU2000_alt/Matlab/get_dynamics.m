@@ -27,7 +27,7 @@ function [C, c, theta, tau_ratio] = get_dynamics(params, ss, shock, T)
     gamma     = params.gamma;
     theta_bar = params.theta_bar;
     A         = params.A;
-    delta     = params.delta;
+    xi        = params.xi;
 
     % Unpack the steady state values
     C_ss = ss(1);
@@ -54,21 +54,16 @@ function [C, c, theta, tau_ratio] = get_dynamics(params, ss, shock, T)
     for t  = 1:T % Iterate the system  
         
         % Compute current past average consumption
-        X(t) = (1 - phi) * alpha * C_last + phi * X_last ; % With tax adjustment
-        x(t) = (1 - phi) * alpha * c_last + phi * x_last ; % Without tax adjustment
+        X(t) = (1 - phi) * alpha * C_last + phi * X_last ;                                  % With tax adjustment
+        x(t) = (1 - phi) * alpha * c_last + phi * x_last ;                                  % Without tax adjustment
         
         % Compute current consumption
-        C(t) = X(t) + ( ...
-            (A/theta_bar)*( (1-beta*phi)/(1-delta)) ...
-                + A *( (1 / theta(t)) - (1 / theta_bar))*( ...
-                (1-beta*phi*psi)/(1-delta*psi)) ...
-                )^(-1/gamma); % With tax adjustment
-        c(t) = x(t) + ((theta(t)/A)*(1-tau_ss))^(1/gamma); % Without tax adjustment
+        C(t) = (beta * xi * (1 - phi) * alpha /(1 - beta * phi) + A/theta(t) )^(-1/gamma);  % With tax adjustment
+        c(t) = ((theta(t)/A)*(1-tau_ss))^(1/gamma); % Without tax adjustment
         
         % Compute current tax ratio consistent with the current consumption (C)
-        tau_ratio(t) = ((alpha*beta*(1-phi))/ (1-delta*psi))*...
-                (psi + ((1-psi)/(1-delta))*(theta(t)/theta_bar));
-
+        tau_t =  1 - A./theta(t) .* C(t)^(gamma);                                           % Eq 8
+        tau_ratio(t) = tau_t / (1 - tau_t );
         % Compute next period productivity
         if t < T
             theta_inv = ( (1 - psi)/theta_bar + psi/theta(t) );
@@ -82,12 +77,5 @@ function [C, c, theta, tau_ratio] = get_dynamics(params, ss, shock, T)
         c_last = c(t);
 
     end % End of iteration
-
-    % Drop the first element of the vectors
-    % C = C(2:end);
-    % c = c(2:end);
-    % theta = theta(2:end);
-    % tau_ratio = tau_ratio(2:end);
-
 
 end  %get_dynamics

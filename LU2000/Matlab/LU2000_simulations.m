@@ -9,18 +9,11 @@ tic
 
 
 % Set Model parameters
-
 beta            = 0.97;
 phi             = 0.0;
 gamma_vals      = [1.5 5.0];
 alpha_vals      = [0.2 0.5 0.8];
 
-% sigma_vals      = 0.01;
-% psi             = 0.9;
-% beta            = 0.97;
-% phi             = 0.0;
-% gamma_vals      = 1.5;
-% alpha_vals      = 0.2;
 
 % Parameters that do not affect welfare;
 theta_bar       = 1;                    
@@ -32,10 +25,19 @@ T               = 1000;                 % Number of periods
 Tburn           = 100;                  % Number of periods to burn
 Nsim            = 1E4;                  % Number of simulations
 % Specify the stochastic process for the productivity shock
-which_method = 'AR1'; % 'paper' or 'AR1'
+which_method = 'paper'; % 'paper' or 'AR1'
 % Specify stochastic process parameters
 sigma_vals      = [0.01 0.04];         % Standard deviation of the shock
 psi             = 0.9;                 % For 'paper' method
+
+% sigma_vals      = 0.01;
+% psi             = 0.9;
+% beta            = 0.97;
+% phi             = 0.0;
+% gamma_vals      = 1.5;
+% alpha_vals      = 0.5;
+
+
 
 % Pre allocate space for results
 sp_sp_star = zeros(1, numel(gamma_vals) * numel(alpha_vals) * numel(sigma_vals));
@@ -100,8 +102,8 @@ end
 
 %% Create table
 
-%  T = [sp_sp_star,sp_sp_bar,sp_ls,ls_det_LS];
-T = gen_table(sigma_vals, gamma_vals, alpha_vals, sp_sp_star, sp_sp_bar, sp_ls, ls_det_LS);
+% T = [sp_sp_star,sp_sp_bar,sp_ls,ls_det_LS];
+ T = gen_table(sigma_vals, gamma_vals, alpha_vals, sp_sp_star, sp_sp_bar, sp_ls, ls_det_LS);
 
 disp(T)
 toc

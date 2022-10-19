@@ -9,18 +9,17 @@ tic
 
 % Set Model parameters
 
-beta            = 0.97;
-phi             = 0.0;
-xi              = 1.0;
-gamma_vals      = [1.5 5.0];
-alpha_vals      = [0.2 0.5 0.8];
-
-% sigma_vals      = 0.01;
-% psi             = 0.9;
 % beta            = 0.97;
 % phi             = 0.0;
-% gamma_vals      = 1.5;
-% alpha_vals      = 0.2;
+% xi              = 1.0;
+% gamma_vals      = [1.5 5.0];
+% alpha_vals      = [0.2 0.5 0.8];
+
+xi              = 1.0;
+beta            = 1.00;
+phi             = 0.0;
+gamma_vals      = 1.5;
+alpha_vals      = 0.5;
 
 % Parameters that do not affect welfare;
 theta_bar       = 1;                    
@@ -30,12 +29,12 @@ A               = 1;
 % Reference page 363.
 T               = 1000;                 % Number of periods
 Tburn           = 100;                  % Number of periods to burn
-Nsim            = 1E4;                  % Number of simulations
+Nsim            = 1E4;                % Number of simulations
 % Specify the stochastic process for the productivity shock
-which_method = 'paper'; % 'paper' or 'AR1'
+which_method = 'AR1'; % 'paper' or 'AR1'
 % Specify stochastic process parameters
 sigma_vals      = [0.01 0.04];         % Standard deviation of the shock
-psi             = 0.9;                 % For 'paper' method
+psi             = 0.9;                 % Persistence of the shock 
 
 % Pre allocate space for results
 sp_sp_star = zeros(1, numel(gamma_vals) * numel(alpha_vals) * numel(sigma_vals));
@@ -65,11 +64,6 @@ for sigma = sigma_vals
             
             % Simulate; 
             sim_results             = simulate_economy(params, ss, theta, Tburn);
-            % sim_results             = do_simulations(Nsim, params, ss, sigma, T, Tburn);
-            
-            % Get theta_Bar
-%             sim_results_theta       = sim_results(1:Nsim,:);
-            % sim_results_theta       = sim_results.theta;
 
             % Parameters for Deterministic Simulation (needs to include theta_Bar);
             params_det              = params;
@@ -84,7 +78,7 @@ for sigma = sigma_vals
 
             % Calculate welfare
             fprintf("Solving for Delta.\n")
-            Delta                   = calculate_welfare(sim_results, sim_results_det, params, Nsim);
+            Delta                   = calculate_welfare(sim_results, sim_results_det, params);
             
             % Store welfare loss in %
             sp_sp_star(i)   = round( 100 * Delta(1), 3);
